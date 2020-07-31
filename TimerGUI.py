@@ -3,6 +3,8 @@ from TaskLoggerGUI import *
 import datetime
 
 init_time = 0
+init_break = 0
+on_break = False
 timing_on = False
 since_start = False
 time_mod = False
@@ -13,16 +15,28 @@ def start_timer():
     global timing_on
     timing_on = True
     init_time = datetime.datetime.now()
-    task_submition()
+    task_submition('start')
 
 
+def break_duration():
+    return stringify_timedate(datetime.datetime.now() - init_break)
+
+
+# change the task submition function to handle 'states' rather than all these true false statements
 def pause_timer():
-    if pause_button.config('text')[-1] == 'True':
-        global timing_on
-        timing_on = False
-        task_submition(root_or_start=since_start, entr1=True)
+    global timing_on
+    global init_break
+    print(pause_button.config('text')[-1])
+    if pause_button.config('text')[-1] == 'Unpause':
+        print('now weere unpausing')
+        task_submition('unpause', root_or_start=break_duration())
+        timing_on = True
         pause_button.config(text='Pause')
     else:
+        print('now were pausing')
+        init_break = datetime.datetime.now()
+        task_submition('pause', root_or_start=init_break)
+        timing_on = False
         pause_button.config(text='Unpause')
 
 
@@ -38,11 +52,6 @@ def time_since():
     global timing_on
     global since_start
     global time_mod
-
-    print(not timing_on)
-    print(since_start)
-    print(time_mod)
-    print('sssssssss')
 
     if timing_on:
         since_start = cwt - init_time

@@ -4,16 +4,26 @@ import csv
 import datetime
 
 
-def task_submition(root_or_start=False, entr1=False, entr2=False, ):
+def task_submition(state, root_or_start=False, entr1=False, entr2=False):
     logtime = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    if not (entr1 and entr2):
+    if state == 'start':
+        # Timer Starting
         data = [logtime, 'Day Starting', '00:00:00']
-    elif entr1 and not entr2:
+    elif state == 'pause':
+        # pause button initiated
         data = [logtime, 'Break started', root_or_start]
-    else:
+    elif state == 'unpause':
+        # unpause initiated
+        data = [logtime, 'Break ended', root_or_start]
+    elif state == 'stop':
+        None
+    elif state == 'log':
         task_name = entr1.get()
         description = entr2.get()
         data = [logtime, task_name, description]
+    else:
+        return 'a huge fucking error'
+
     cwd = os.getcwd()
     filename = "timerlog.csv"
     filepath = os.path.join(cwd, filename)
@@ -27,7 +37,8 @@ def task_submition(root_or_start=False, entr1=False, entr2=False, ):
         with open(filename, 'w') as file:
             writer = csv.writer(file)
             writer.writerows([["Time", "TaskName", "Description"], data])
-    if entr2:
+    if state == 'log':
+        # regular log entry form closure
         root_or_start.destroy()
 
 
