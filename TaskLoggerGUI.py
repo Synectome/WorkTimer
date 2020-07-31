@@ -8,7 +8,7 @@ def task_submition(state, root_or_start=False, entr1=False, entr2=False):
     logtime = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     if state == 'start':
         # Timer Starting
-        data = [logtime, 'Day Starting', '00:00:00']
+        data = [logtime, 'Start of Session', '00:00:00']
     elif state == 'pause':
         # pause button initiated
         data = [logtime, 'Break started', root_or_start]
@@ -16,7 +16,7 @@ def task_submition(state, root_or_start=False, entr1=False, entr2=False):
         # unpause initiated
         data = [logtime, 'Break ended', root_or_start]
     elif state == 'stop':
-        None
+        data = [logtime, 'End of Session', entr1]
     elif state == 'log':
         task_name = entr1.get()
         description = entr2.get()
@@ -37,7 +37,7 @@ def task_submition(state, root_or_start=False, entr1=False, entr2=False):
         with open(filename, 'w') as file:
             writer = csv.writer(file)
             writer.writerows([["Time", "TaskName", "Description"], data])
-    if state == 'log':
+    if (state == 'log') or (state == 'stop'):
         # regular log entry form closure
         root_or_start.destroy()
 
@@ -58,7 +58,7 @@ def task_log_window():
     my_entry2.pack(padx=5, pady=5)
 
     button1 = Button(frame, text="Submit Log", width=8, bg="#18d9ac",
-                     command=lambda: task_submition(root, my_entry, my_entry2))
+                     command=lambda: task_submition('log', root, my_entry, my_entry2))
     button1.pack(padx=3, pady=3)
 
     root.title("Log Entry Form")

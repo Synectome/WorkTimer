@@ -18,6 +18,11 @@ def start_timer():
     task_submition('start')
 
 
+def stop(root):
+    duration = stringify_timedate(datetime.datetime.now() - init_time)
+    task_submition('stop', root_or_start=root, entr1=duration)
+
+
 def break_duration():
     return stringify_timedate(datetime.datetime.now() - init_break)
 
@@ -41,6 +46,7 @@ def pause_timer():
 
 
 def stringify_timedate(dt):
+    '''should only be used on datetime-delta objs'''
     seconds = dt.seconds
     hours, remainder = divmod(seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
@@ -101,7 +107,7 @@ pause_button = Button(leftframe, text="Pause", width=8, bg="#18d9ac", command=pa
 pause_button.pack(padx=3, pady=3)
 button3 = Button(leftframe, text="Log Task", width=8, bg="#18d9ac", command=task_log_window)
 button3.pack(padx=3, pady=3)
-button4 = Button(leftframe, text="Stop", width=8, bg="#18d9ac")
+button4 = Button(leftframe, text="Stop", width=8, bg="#18d9ac", command = lambda: stop(root))
 button4.pack(padx=3, pady=3)
 
 lbl1 = Label(root, font=('calibri', 40, 'bold'),
