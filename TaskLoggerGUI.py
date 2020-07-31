@@ -4,12 +4,16 @@ import csv
 import datetime
 
 
-def task_submition(entr1, entr2, toor):
-    task_name = entr1.get()
-    description = entr2.get()
+def task_submition(root_or_start=False, entr1=False, entr2=False, ):
     logtime = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    data = [logtime, task_name, description]
-    print(task_name)
+    if not (entr1 and entr2):
+        data = [logtime, 'Day Starting', '00:00:00']
+    elif entr1 and not entr2:
+        data = [logtime, 'Break started', root_or_start]
+    else:
+        task_name = entr1.get()
+        description = entr2.get()
+        data = [logtime, task_name, description]
     cwd = os.getcwd()
     filename = "timerlog.csv"
     filepath = os.path.join(cwd, filename)
@@ -23,7 +27,8 @@ def task_submition(entr1, entr2, toor):
         with open(filename, 'w') as file:
             writer = csv.writer(file)
             writer.writerows([["Time", "TaskName", "Description"], data])
-    toor.destroy()
+    if entr2:
+        root_or_start.destroy()
 
 
 def task_log_window():
@@ -42,7 +47,7 @@ def task_log_window():
     my_entry2.pack(padx=5, pady=5)
 
     button1 = Button(frame, text="Submit Log", width=8, bg="#18d9ac",
-                     command=lambda: task_submition(my_entry, my_entry2, root))
+                     command=lambda: task_submition(root, my_entry, my_entry2))
     button1.pack(padx=3, pady=3)
 
     root.title("Log Entry Form")

@@ -4,29 +4,59 @@ import datetime
 
 init_time = 0
 timing_on = False
+since_start = False
+time_mod = False
+
 
 def start_timer():
     global init_time
     global timing_on
     timing_on = True
     init_time = datetime.datetime.now()
+    task_submition()
+
+
+def pause_timer():
+    if pause_button.config('text')[-1] == 'True':
+        global timing_on
+        timing_on = False
+        task_submition(root_or_start=since_start, entr1=True)
+        pause_button.config(text='Pause')
+    else:
+        pause_button.config(text='Unpause')
+
+
+def stringify_timedate(dt):
+    seconds = dt.seconds
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return'{:02}:{:02}:{:02}'.format(int(hours), int(minutes), int(seconds))  # since.strftime("%H:%M:%S")
 
 
 def time_since():
     cwt = datetime.datetime.now()
     global timing_on
-    print(timing_on)
+    global since_start
+    global time_mod
+
+    print(not timing_on)
+    print(since_start)
+    print(time_mod)
+    print('sssssssss')
+
     if timing_on:
-        since = cwt - init_time
-        seconds = since.seconds
-        hours, remainder = divmod(seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        stringify = '{:02}:{:02}:{:02}'.format(int(hours), int(minutes), int(seconds)) #since.strftime("%H:%M:%S")
-        lbl2.config(text=stringify)
-        lbl2.after(1000,time_since)
+        since_start = cwt - init_time
+        lbl2.config(text=stringify_timedate(since_start))
+        lbl2.after(1000, time_since)
+        time_mod = True
+    elif ((not timing_on) and since_start) and time_mod:
+        lbl2.config(text=stringify_timedate(since_start))
+        lbl2.after(1000, time_since)
+        time_mod = False
     else:
         lbl2.config(text='--/--/--')
-        lbl2.after(1000,time_since)
+        lbl2.after(1000, time_since)
+        time_mod = True
 
 
 def time():
@@ -58,8 +88,8 @@ lbl2 = Label(leftframe, font=('calibri', 12, 'bold'),
              height=1)
 lbl2.pack(padx=3, pady=3)
 time_since()
-button2 = Button(leftframe, text="Pause", width=8, bg="#18d9ac")
-button2.pack(padx=3, pady=3)
+pause_button = Button(leftframe, text="Pause", width=8, bg="#18d9ac", command=pause_timer)
+pause_button.pack(padx=3, pady=3)
 button3 = Button(leftframe, text="Log Task", width=8, bg="#18d9ac", command=task_log_window)
 button3.pack(padx=3, pady=3)
 button4 = Button(leftframe, text="Stop", width=8, bg="#18d9ac")
