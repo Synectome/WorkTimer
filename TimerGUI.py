@@ -61,47 +61,47 @@ def time_since():
 
     if timing_on:
         since_start = cwt - init_time
-        lbl2.config(text=stringify_timedate(since_start))
-        lbl2.after(1000, time_since)
+        shift_timer.config(text=stringify_timedate(since_start))
+        shift_timer.after(1000, time_since)
         time_mod = True
     elif ((not timing_on) and since_start) and time_mod:
-        lbl2.config(text=stringify_timedate(since_start))
-        lbl2.after(1000, time_since)
+        shift_timer.config(text=stringify_timedate(since_start))
+        shift_timer.after(1000, time_since)
         time_mod = False
     else:
-        lbl2.config(text='--/--/--')
-        lbl2.after(1000, time_since)
+        shift_timer.config(text='--/--/--')
+        shift_timer.after(1000, time_since)
         time_mod = True
 
 
 def time():
     time_string = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    lbl1.config(text=time_string)
-    lbl1.after(1000, time)
+    clock_label.config(text=time_string)
+    clock_label.after(1000, time)
 
 
 root = Tk()
 
-root.geometry("800x200")
+root.geometry("760x230")
 frame = Frame(root)
 frame.pack()
 
 leftframe = Frame(root, bd=2, bg="#38ba41")
-leftframe.pack(side=LEFT)
+leftframe.pack(side=LEFT, padx=8)
 
-rightframe = Frame(root)
-rightframe.pack(side=RIGHT)
+rightframe = Frame(root, bd=2, bg="#38ba41")
+rightframe.pack(side=RIGHT, padx=8)
 
-label = Label(frame, text="Your on the clock")
-label.pack(pady=4)
+heading = Label(frame, text="Your on the clock")
+heading.pack(pady=4)
 
-button1 = Button(leftframe, text="Start", width=8, bg="#18d9ac", command=start_timer)
-button1.pack(padx=3, pady=3)
-lbl2 = Label(leftframe, font=('calibri', 12, 'bold'),
+start_button = Button(leftframe, text="Start", width=8, bg="#18d9ac", command=start_timer)
+start_button.pack(padx=3, pady=3)
+shift_timer = Label(leftframe, font=('calibri', 12, 'bold'),
              background="#18d9ac",
              foreground='black',
              height=1)
-lbl2.pack(padx=3, pady=3)
+shift_timer.pack(padx=3, pady=3)
 time_since()
 pause_button = Button(leftframe, text="Pause", width=8, bg="#18d9ac", command=pause_timer)
 pause_button.pack(padx=3, pady=3)
@@ -110,11 +110,12 @@ button3.pack(padx=3, pady=3)
 button4 = Button(leftframe, text="Stop", width=8, bg="#18d9ac", command = lambda: stop(root))
 button4.pack(padx=3, pady=3)
 
-lbl1 = Label(root, font=('calibri', 40, 'bold'),
-            background='#38ba41',
+clock_label = Label(rightframe, font=('calibri', 40, 'bold'),
+            background="#18d9ac",
             foreground='black',
             height=2)
-lbl1.pack(anchor='center', pady=12)
+clock_label.pack(anchor='center', pady=12)
+#clock_label.place(anchor='center', relx=0.5, rely=0.5)
 time()
 
 root.title("Work Timer")
